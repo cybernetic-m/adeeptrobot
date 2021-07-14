@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<robot name ="adeeptrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- This is the XACRO file for the definition of links and joints Macros -->
+
+<!-- Macro to define the base_link -->
+<xacro:macro name="link_box_base" params="name origin_rpy origin_xyz size material">
+<link name="${name}">
+<visual>
+<geometry>
+<box size="${size}"/>
+</geometry>
+<origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+<material name="${material}"/>
+</visual>
+<collision>
+<geometry>
+<box size="${size}"/>
+</geometry>
+<origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+</collision>
+</link>
+</xacro:macro>
+
+<!-- Macro to define Parallelepiped Links -->
+<xacro:macro name="link_box" params="name origin_rpy origin_xyz size material mass ixx iyy izz">
+<link name="${name}">
+<visual>
+<geometry>
+<box size="${size}"/>
+</geometry>
+<origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+<material name="${material}"/>
+</visual>
+<collision>
+<geometry>
+<box size="${size}"/>
+</geometry>
+<origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+</collision>
+<inertial>
+<mass value="${mass}"/>
+<inertia ixx="${ixx}" ixy="0" ixz="0" iyy="${iyy}" iyz="0" izz="${izz}"/>
+</inertial>
+</link>
+</xacro:macro>
+
+
+<!-- Macro to define Cylinder Links -->
+<xacro:macro name="link_cylinder" params="name origin_rpy origin_xyz radius length material mass ixx iyy izz">
+<link name="${name}">
+<visual>
+<geometry>
+<cylinder radius="${radius}" length="${length}"/>
+</geometry>
+<origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+<material name="${material}"/>
+</visual>
+<collision>
+<geometry>
+<cylinder radius="${radius}" length="${length}"/>
+</geometry>
+<origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+</collision>
+<inertial>
+<mass value="${mass}"/>
+<inertia ixx="${ixx}" ixy="0" ixz="0" iyy="${iyy}" iyz="0" izz="${izz}"/>
+</inertial>
+</link>
+</xacro:macro>
+
+<!-- Macro to define every Robot Mobile Joint -->
+<xacro:macro name="robot_joint" params="name type axis origin_rpy origin_xyz parent child effort limit_inf limit_sup vel">
+<joint name="${name}" type="${type}">
+<limit effort="${effort}" lower="${limit_inf}" upper="${limit_sup}" velocity="${vel}"/>
+<axis xyz="${axis}"/>
+<origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+<parent link="${parent}"/>
+<child link="${child}"/>
+</joint>
+</xacro:macro>
+
+<!-- Macro to define every Robot Fixed Joint -->
+<xacro:macro name="joint_fixed" params="name type parent child">
+<joint name="${name}" type="${type}">
+<parent link="${parent}"/>
+<child link="${child}"/>
+</joint>
+</xacro:macro>
+
+</robot>

@@ -1,0 +1,19 @@
+<launch>
+  <!-- This is the launch file to run the robot model in Rviz and visualize it-->
+  
+    <!-- Load in Parameter Server the URDF Xacro Robot Model as "robot_description" -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find adeeptrobot)/urdf/adeeptrobot.xacro'"/>
+    
+    <!-- Launch the node "robot_state_publisher"-->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+    
+    <!-- Launch the node "joint_state_publisher"-->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    
+    <!-- Launch the node "joint_state_publisher_gui" (Graphical Unit Interface of Joint State Publisher)-->
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    
+    <!-- Launch the node "Rviz" (ROS Visualization Tool)-->
+    <node name="rviz" pkg="rviz" type="rviz" args=" -d $(find adeeptrobot)/launch/config.rviz"/>
+    
+</launch>

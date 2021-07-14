@@ -1,0 +1,155 @@
+<?xml version ="1.0"?>
+<robot name="adeeptrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- Load Joints/Links Macro -->
+<xacro:include filename="$(find adeeptrobot)/urdf/joints_links_macro.xacro"/>
+
+<!-- Definition of the robot's color -->
+<material name="Nero">
+<color rgba="0 0 0 0.4"/>
+</material>
+
+ <!-- Used for fixing robot to Gazebo 'base_link' -->
+<link name="world"/>
+<joint name="fix" type="fixed">
+<!-- Origin is used because the robot spawn 1 meter top from ground -->
+<origin xyz="0 0 -0.99" rpy="0 0 0"/> 
+<parent link="world"/>
+<child link="base_link"/>
+</joint>
+ 
+<!-- Definition of parallelepiped base_link -->
+<xacro:link_box_base name="base_link" origin_rpy="0 0 0" origin_xyz="0 0 0" size="0.16 0.13 0.003" material="Nero"/>
+
+<!-- Definition of 4 small stands that substain the body to the base_link -->
+<!-- Standoff: m=0,1 g = 0,0001 kg    R = 0,3 cm = 0,003 m    h= 3 cm = 0,04 m-->
+<xacro:link_cylinder name="Standoff1" origin_rpy="0 0 0" origin_xyz="-0.02 0.025 0.0165" radius="0.003" length="0.03" material="Nero" mass="0.0001" ixx="0.0000000135" iyy="0.0000000135" izz="0.00000000045"/>
+<xacro:link_cylinder name="Standoff2" origin_rpy="0 0 0" origin_xyz="-0.02 -0.025 0.0165" radius="0.003" length="0.03" material="Nero" mass="0.0001" ixx="0.0000000135" iyy="0.0000000135" izz="0.00000000045"/>
+<xacro:link_cylinder name="Standoff3" origin_rpy="0 0 0" origin_xyz="-0.07 -0.025  0.0165" radius="0.003" length="0.03" material="Nero" mass="0.0001" ixx="0.0000000135" iyy="0.0000000135" izz="0.00000000045"/>
+<xacro:link_cylinder name="Standoff4" origin_rpy="0 0 0" origin_xyz="-0.07 0.025 0.0165" radius="0.003" length="0.03" material="Nero" mass="0.0001" ixx="0.0000000135" iyy="0.0000000135" izz="0.00000000045"/>
+
+<!-- Definition of 4 screws that fix the 4 small stands to base_link-->
+<xacro:joint_fixed name="Vite_Standoff1" type="fixed"  parent="base_link" child="Standoff1"/>
+<xacro:joint_fixed name="Vite_Standoff2" type="fixed"  parent="base_link" child="Standoff2"/>
+<xacro:joint_fixed name="Vite_Standoff3" type="fixed"  parent="base_link" child="Standoff3"/>
+<xacro:joint_fixed name="Vite_Standoff4" type="fixed"  parent="base_link" child="Standoff4"/>
+
+<!-- Definition of cylinder Link "Body" -->
+<!-- Body: m = 30 g = 0,03 kg    R = 4,5 cm = 0,045 m    h = 0,3 cm = 0,003 m -->
+<xacro:link_cylinder name="Body" origin_rpy="0 0 0" origin_xyz="-0.045 0 0.033" radius="0.045" length="0.003" material="Nero" mass="0.03" ixx="0.000015" iyy="0.000015" izz="0.00003"/>
+
+<!-- Definition of 4 screws that fix the 4 small stands to body-->
+<xacro:joint_fixed name="Standoff1_Body" type="fixed" parent="Standoff1" child="Body"/>
+<xacro:joint_fixed name="Standoff2_Body" type="fixed" parent="Standoff1" child="Body"/>
+<xacro:joint_fixed name="Standoff3_Body" type="fixed" parent="Standoff1" child="Body"/>
+<xacro:joint_fixed name="Standoff4_Body" type="fixed" parent="Standoff1" child="Body"/>
+
+<!-- Definition of Link "Base" and definition of Revolute Joint "Body_Base" that allow the Base's rotation [0,180] degrees refers to Body around z-axis -->
+<!-- Base:  m = 12 g = 0,012 kg    R = 3,5 cm = 0,035 m    h = 2 cm = 0,02 m  -->
+<xacro:robot_joint name="Body_Base" type="revolute" axis="0 0 1" origin_rpy="0 0 0" origin_xyz="-0.045 0 0.035" parent="Body" child="Base" effort="0" limit_inf="0" limit_sup="3.14" vel="1"/>
+<xacro:link_cylinder name="Base" origin_rpy="0 0 0" origin_xyz="0 0 0.01" radius="0.035" length="0.02" material="Nero" mass="0.012" ixx="0.000004" iyy="0.000004" izz="0.00000735"/>
+
+<!-- Definition of 2 parallelepiped Links (Link1a and Link1b) and definition of 2 screws that fix Link1a/b to "Base"  -->
+<!-- Link1a:  m = 4 g = 0,004 kg    d = 0,3 cm = 0,003 m     w = 2 cm = 0,02 m    h = 5 cm = 0,05 m  -->
+<!-- Link1b:  m = 4 g = 0,004 kg    d = 0,3 cm = 0,003 m     w = 2 cm = 0,02 m    h = 5 cm = 0,05 m  -->
+<xacro:link_box name="Link1a" origin_rpy="0 0 0" origin_xyz="-0.02 0 0.045" size="0.003 0.02 0.05" material="Nero" mass="0.004" ixx="0.00000096" iyy="0.00000084" izz="0.00000014"/>
+<xacro:link_box name="Link1b" origin_rpy="0 0 0" origin_xyz="0.02 0 0.045" size="0.003 0.02 0.05" material="Nero" mass="0.004" ixx="0.00000096" iyy="0.00000084" izz="0.00000014"/>
+<xacro:joint_fixed name="Base_Link1a" type="fixed" parent="Base" child="Link1a"/>
+<xacro:joint_fixed name="Base_Link1b" type="fixed" parent="Base" child="Link1b"/>
+
+<!-- Definition of cylinder Link "Joint1" and the revolute Joint "Link1a_Joint1" that allows the "Joint1" rotation [-90, 90] degrees refers to Link1a around x-axis -->
+<!-- Joint1 simulate the weight of servomotor MG90S: m = 13,4 g = 0,0134 kg-->
+<xacro:link_cylinder name="Joint1" origin_rpy="0 1.57 0" origin_xyz="0 0 0" radius="0.005" length="0.003" material="Nero" mass="0.0134" ixx="1" iyy="1" izz="1"/>
+<xacro:robot_joint name="Link1a_Joint1" type="revolute" axis="1 0 0" origin_rpy="0 0 0" origin_xyz="-0.023 0 0.065" parent="Link1a" child="Joint1" effort="0" limit_inf="-1.57" limit_sup="1.57" vel="1"/>
+
+<!-- Definition of 2 parallelepiped Links (Link2a and Link2b) and definition of a screw that fix "Link2a" to "Joint1"  --> 
+<!-- Link2a:  m = 4 g = 0,004 kg    d = 0,3 cm = 0,003 m     w = 2 cm = 0,02 m    h = 8 cm = 0,08 m  -->
+<!-- Link2b:  m = 4 g = 0,004 kg    d = 0,3 cm = 0,003 m     w = 2 cm = 0,02 m    h = 8 cm = 0,08 m  -->
+<xacro:link_box name="Link2a" origin_rpy="0 0 0" origin_xyz="-0.004 0 0.025" size="0.003 0.02 0.08" material="Nero" mass="0.004" ixx="0.0000023" iyy="0.0000021" izz="0.00000014"/>
+<xacro:link_box name="Link2b" origin_rpy="0 0 0" origin_xyz="0.037 0 0.025" size="0.003 0.02 0.08" material="Nero" mass="0.004" ixx="0.0000023" iyy="0.0000021" izz="0.00000014"/>
+<xacro:joint_fixed name="Joint1_Link2a" type="fixed" parent="Joint1" child="Link2a"/>
+
+<!-- Definition of cylinder Link "Joint2" and the revolute Joint "Link2a_Joint2" that allows the "Joint2" rotation [-90, 90] degrees refers to Link2a around x-axis-->
+<!-- Joint2 simulate the weight of servomotor MG90S: m = 13,4 g = 0,0134 kg-->
+<xacro:link_cylinder name="Joint2" origin_rpy="0 1.57 0" origin_xyz="0 0 0" radius="0.005" length="0.003" material="Nero" mass="0.0134" ixx="1" iyy="1" izz="1"/>
+<xacro:robot_joint name="Link2a_Joint2" type="revolute" axis="1 0 0" origin_rpy="0 0 0" origin_xyz="0 0 0.05" parent="Link2a" child="Joint2" effort="0" limit_inf="-1.57" limit_sup="1.57" vel="1"/>
+
+<!-- Definition of Joint that fix "Link2a" to "Link2b"-->
+<xacro:joint_fixed name="Link2a_Link2b" type="fixed" parent="Link2a" child="Link2b"/>
+
+<!-- Definition of 2 parallelepiped Links (Link3a and Link3b) and definition of a screw that fix "Link3a" to "Joint2"  -->
+<!-- Link3a:  m = 4 g = 0,004 kg    d = 0,3 cm = 0,003 m     w = 2 cm = 0,02 m    h = 6 cm = 0,06 m  -->
+<!-- Link3b:  m = 4 g = 0,004 kg    d = 0,3 cm = 0,003 m     w = 2 cm = 0,02 m    h = 6 cm = 0,06 m  -->
+<xacro:link_box name="Link3a" origin_rpy="0 0 0" origin_xyz="0.003 0 0.015" size="0.003 0.02 0.06" material="Nero" mass="0.004" ixx="0.0000013" iyy="0.0000012" izz="0.00000014"/>
+<xacro:link_box name="Link3b" origin_rpy="0 0 0" origin_xyz="0.043 0 0.015" size="0.003 0.02 0.06" material="Nero" mass="0.004" ixx="0.0000013" iyy="0.0000012" izz="0.00000014"/>
+<xacro:joint_fixed name="Joint2_Link3a" type="fixed" parent="Joint2" child="Link3a"/>
+
+<!-- Definition of Joint that fix "Link3a" to "Link3b" -->
+<xacro:joint_fixed name="Link3a_Link3b" type="fixed" parent="Link3a" child="Link3b"/>
+
+<!-- Definition of Joint "FixJoint1" that fix "Link1b" to "Link2b"-->
+<xacro:link_cylinder name="FixJoint1" origin_rpy="0 1.57 0" origin_xyz="0.017 0 0.065" radius="0.005" length="0.003" material="Nero" mass="0" ixx="1" iyy="1" izz="1"/>
+<xacro:joint_fixed name="Link1b_FixJoint1" type="fixed" parent="Link1b" child="FixJoint1"/>
+<xacro:joint_fixed name="FixJoint1_Link2b" type="fixed" parent="FixJoint1" child="Link2b"/>
+
+<!-- Definition of Joint "FixJoint2" that fix "Link2b" to "Link3b"-->
+<xacro:link_cylinder name="FixJoint2" origin_rpy="0 1.57 0" origin_xyz="0.04 0 0.05" radius="0.005" length="0.003" material="Nero" mass="0" ixx="1" iyy="1" izz="1"/>
+<xacro:joint_fixed name="Link2b_FixJoint2" type="fixed" parent="Link2b" child="FixJoint2"/>
+<xacro:joint_fixed name="FixJoint2_Link3b" type="fixed" parent="FixJoint2" child="Link3b"/>
+
+<!-- Definition of cylinder Link "endEffector" of Robot and the Joint "Link3a_endEffector" that allows the "endEffector" rotation [-90, 90] degrees refers to Link3a around z-axis-->
+<!-- The end Effector has the weight of the entire plier of Adeept Robot  m = 47 g = 0,047 kg-->
+<xacro:link_cylinder name="endEffector" origin_rpy="0 0 0" origin_xyz="0 0 0" radius="0.02" length="0.005" material="Nero" mass="0.047" ixx="1" iyy="1" izz="1"/>
+<xacro:robot_joint name="Link3a_endEffector" type="revolute" axis="0 0 1" origin_rpy="0 0 0" origin_xyz="0.023 0 0.043" parent="Link3a" child="endEffector" effort="0" limit_inf="-1.57" limit_sup="1.57" vel="1"/>
+
+
+<!-- GAZEBO definition of Transmissions to all links and GAZEBO Plugin-->
+
+<!-- -->
+<transmission name="base">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="base_motor">
+<mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="Body_Base"> <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+<transmission name="joint1_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="joint1_motor">
+<mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="Link1a_Joint1"> <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+</joint>
+</transmission>
+  
+<transmission name="joint2_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="joint2_motor">
+<mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="Link2a_Joint2"> <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+</joint>
+</transmission>
+  
+<transmission name="endeffector_trans">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="endeffector_motor">
+<mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="Link3a_endEffector"> <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+  
+<!-- GAZEBO PLUGIN to connect ROS with Gazebo-->
+<gazebo>
+<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+<robotNamespace>/</robotNamespace>
+</plugin>
+</gazebo>
+
+</robot>
+
+

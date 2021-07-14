@@ -1,0 +1,22 @@
+digraph G {
+"Base" -> "Link1a"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"Body" -> "Base"[label="Broadcaster: /robot_state_publisher\nAverage rate: 20.230 Hz\nMost recent transform: 1625590842.909 ( 0.036 sec old)\nBuffer length: 4.943 sec\n"];
+"Base" -> "Link1b"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"Joint1" -> "Link2a"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"Link1b" -> "Joint1"[label="Broadcaster: /robot_state_publisher\nAverage rate: 20.230 Hz\nMost recent transform: 1625590842.909 ( 0.036 sec old)\nBuffer length: 4.943 sec\n"];
+"Joint2" -> "Link3a"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"Link2a" -> "Joint2"[label="Broadcaster: /robot_state_publisher\nAverage rate: 20.230 Hz\nMost recent transform: 1625590842.909 ( 0.036 sec old)\nBuffer length: 4.943 sec\n"];
+"Link2a" -> "Link2b"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"Link3a" -> "Link3b"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"Standoff1" -> "Body"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "Standoff1"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"world" -> "base_link"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "Standoff2"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "Standoff3"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "Standoff4"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1625590842.945 sec old)\nBuffer length: 0.000 sec\n"];
+"Link3a" -> "endEffector"[label="Broadcaster: /robot_state_publisher\nAverage rate: 20.230 Hz\nMost recent transform: 1625590842.909 ( 0.036 sec old)\nBuffer length: 4.943 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1625590842.945"[ shape=plaintext ] ;
+ }->"world";
+}

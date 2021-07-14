@@ -1,0 +1,43 @@
+<launch>
+  
+  <!-- This is the launch file to spawn and simulate the Robot in the Gazebo World -->
+  
+  <!-- These are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="model" default="$(find adeeptrobot)/urdf/adeeptrobot.xacro"/>
+
+  <!--Include the empty world of Gazebo-->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Load in Parameter Server the URDF Xacro Robot Model as "robot_description" -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find adeeptrobot)/urdf/adeeptrobot.xacro'" />
+
+  <!-- Spawn robot_description in Gazebo -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-z 1.0 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
+  
+  <!-- Launch the node "robot_state_publisher" with publish frequency = 30 hz -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher"  name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+  
+  <!-- Load the YAML file that define Positions Controller for all of the joint's Robot into the Parameter Server  -->
+  <rosparam command="load" file="$(find adeeptrobot)/config/joints.yaml" ns="adeeptrobot_joint_state_controller" />
+  <rosparam command="load" file="$(find adeeptrobot)/config/base.yaml" ns="adeeptrobot_base_controller" />
+  <rosparam command="load" file="$(find adeeptrobot)/config/joint1.yaml" ns="adeeptrobot_joint1_controller" />
+  <rosparam command="load" file="$(find adeeptrobot)/config/joint2.yaml" ns="adeeptrobot_joint2_controller" />
+  <rosparam command="load" file="$(find adeeptrobot)/config/endEffector.yaml" ns="adeeptrobot_endEffector_controller" />
+  
+  <!-- The Controller Manager of gazebo_ros_control package spawn Position Controller defined by YAML file into Gazebo-->
+  <node name="adeeptrobot_controller_spawner" pkg="controller_manager" type="spawner" args="adeeptrobot_joint_state_controller adeeptrobot_base_controller adeeptrobot_joint1_controller adeeptrobot_joint2_controller adeeptrobot_endEffector_controller"/>
+
+</launch>

@@ -1,0 +1,5 @@
+#This is a position controller to control "Link1b_Joint1" Joint
+type: "position_controllers/JointPositionController"
+joint: Link1a_Joint1
+
+
